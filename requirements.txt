@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+pandas
+matplotlib
+seaborn
+python-dotenv
+requests
+python-multipart
+jinja2
+numpy
+scipy
+aiofiles

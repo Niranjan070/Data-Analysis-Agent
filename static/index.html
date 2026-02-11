@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Analysis Agent | ScaleDown Powered EDA</title>
+    <meta name="description" content="AI-powered Exploratory Data Analysis agent with intelligent schema compression for lower token costs.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-grid"></div>
+    <div class="glow-orb glow-1"></div>
+    <div class="glow-orb glow-2"></div>
+    <div class="glow-orb glow-3"></div>
+
+    <!-- Header -->
+    <header id="main-header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo-icon">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                        <rect width="32" height="32" rx="8" fill="url(#logo-grad)"/>
+                        <path d="M8 16L14 10L20 16L14 22Z" fill="white" opacity="0.9"/>
+                        <path d="M14 16L20 10L26 16L20 22Z" fill="white" opacity="0.6"/>
+                        <defs>
+                            <linearGradient id="logo-grad" x1="0" y1="0" x2="32" y2="32">
+                                <stop stop-color="#6c5ce7"/>
+                                <stop offset="1" stop-color="#a29bfe"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="logo-text">Data Analysis Agent</h1>
+                    <p class="logo-subtitle">Powered by ScaleDown Compression</p>
+                </div>
+            </div>
+            <div class="header-stats" id="header-stats">
+                <div class="stat-badge" id="tokens-saved-badge">
+                    <span class="stat-icon">🔋</span>
+                    <span class="stat-value" id="header-tokens-saved">0</span>
+                    <span class="stat-label">tokens saved</span>
+                </div>
+                <div class="stat-badge" id="compression-badge">
+                    <span class="stat-icon">📦</span>
+                    <span class="stat-value" id="header-compression">0%</span>
+                    <span class="stat-label">compressed</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="app">
+        <!-- Upload Section -->
+        <section id="upload-section" class="section active">
+            <div class="section-header">
+                <h2>📊 Load Your Dataset</h2>
+                <p>Upload a CSV/Excel file or choose from our sample datasets</p>
+            </div>
+
+            <div class="upload-grid">
+                <!-- Drag & Drop Zone -->
+                <div class="upload-zone" id="drop-zone">
+                    <div class="upload-icon">
+                        <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+                            <circle cx="32" cy="32" r="28" stroke="url(#upload-grad)" stroke-width="2" stroke-dasharray="6 4" opacity="0.6"/>
+                            <path d="M32 20V44M22 30L32 20L42 30" stroke="url(#upload-grad)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <defs>
+                                <linearGradient id="upload-grad" x1="16" y1="16" x2="48" y2="48">
+                                    <stop stop-color="#6c5ce7"/>
+                                    <stop offset="1" stop-color="#a29bfe"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <p class="upload-text">Drag & drop your dataset here</p>
+                    <p class="upload-subtext">or click to browse • CSV, Excel, TSV</p>
+                    <input type="file" id="file-input" accept=".csv,.xlsx,.xls,.tsv" hidden>
+                </div>
+
+                <!-- Sample Datasets -->
+                <div class="sample-datasets">
+                    <h3>📁 Sample Datasets</h3>
+                    <div id="sample-list" class="sample-list">
+                        <div class="sample-loading">Loading samples...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loading state -->
+            <div id="upload-loading" class="loading-overlay" style="display:none">
+                <div class="loader-spinner"></div>
+                <p>Analyzing dataset schema...</p>
+            </div>
+        </section>
+
+        <!-- Dataset Info Section (shown after upload) -->
+        <section id="dataset-section" class="section" style="display:none">
+            <div class="section-header">
+                <div class="section-title-row">
+                    <h2 id="dataset-title">Dataset</h2>
+                    <button class="btn btn-outline" id="btn-change-dataset">Change Dataset</button>
+                </div>
+                <div class="dataset-badges" id="dataset-badges"></div>
+            </div>
+
+            <!-- Schema Compression Card -->
+            <div class="compression-card" id="compression-card">
+                <div class="compression-header">
+                    <h3>🧬 Schema Compression</h3>
+                    <div class="compression-ratio" id="compression-ratio">--x</div>
+                </div>
+                <div class="compression-bars">
+                    <div class="comp-bar-row">
+                        <label>Original (full schema)</label>
+                        <div class="comp-bar">
+                            <div class="comp-bar-fill comp-bar-original" id="comp-bar-original"></div>
+                        </div>
+                        <span class="comp-tokens" id="comp-tokens-original">0</span>
+                    </div>
+                    <div class="comp-bar-row">
+                        <label>Compressed (our schema)</label>
+                        <div class="comp-bar">
+                            <div class="comp-bar-fill comp-bar-compressed" id="comp-bar-compressed"></div>
+                        </div>
+                        <span class="comp-tokens" id="comp-tokens-compressed">0</span>
+                    </div>
+                </div>
+                <div class="compression-savings" id="compression-savings"></div>
+            </div>
+
+            <!-- Compact Schema Preview -->
+            <div class="schema-preview glass-card">
+                <div class="schema-header">
+                    <h3>📋 Compressed Schema</h3>
+                    <button class="btn btn-sm btn-ghost" id="btn-toggle-schema">Expand</button>
+                </div>
+                <pre class="schema-code" id="schema-code"></pre>
+            </div>
+
+            <!-- Data Preview -->
+            <div class="data-preview glass-card">
+                <h3>👀 Data Preview</h3>
+                <div class="table-wrapper">
+                    <table id="preview-table">
+                        <thead id="preview-thead"></thead>
+                        <tbody id="preview-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Analysis Section -->
+        <section id="analysis-section" class="section" style="display:none">
+            <div class="section-header">
+                <h2>🔬 Analysis Tools</h2>
+                <p>Run automated EDA or pick specific analysis tools</p>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <button class="btn btn-primary btn-lg pulse-btn" id="btn-auto-eda">
+                    <span class="btn-icon">🚀</span>
+                    Run Full Auto-EDA
+                </button>
+                <div class="custom-query-wrapper">
+                    <input type="text" id="custom-query" class="input-modern" 
+                           placeholder="Ask anything... e.g., 'Show me correlations'">
+                    <button class="btn btn-accent" id="btn-custom-query">Analyze</button>
+                </div>
+            </div>
+
+            <!-- Individual Tools -->
+            <div class="tools-grid">
+                <button class="tool-card" data-tool="overview">
+                    <span class="tool-icon">📊</span>
+                    <span class="tool-name">Overview</span>
+                    <span class="tool-desc">Shape, types, memory</span>
+                </button>
+                <button class="tool-card" data-tool="describe">
+                    <span class="tool-icon">📈</span>
+                    <span class="tool-name">Statistics</span>
+                    <span class="tool-desc">Descriptive stats</span>
+                </button>
+                <button class="tool-card" data-tool="correlations">
+                    <span class="tool-icon">🔗</span>
+                    <span class="tool-name">Correlations</span>
+                    <span class="tool-desc">Correlation matrix</span>
+                </button>
+                <button class="tool-card" data-tool="distributions">
+                    <span class="tool-icon">📉</span>
+                    <span class="tool-name">Distributions</span>
+                    <span class="tool-desc">Histograms & KDE</span>
+                </button>
+                <button class="tool-card" data-tool="value_counts">
+                    <span class="tool-icon">🏷️</span>
+                    <span class="tool-name">Categories</span>
+                    <span class="tool-desc">Value distributions</span>
+                </button>
+                <button class="tool-card" data-tool="missing_analysis">
+                    <span class="tool-icon">🕳️</span>
+                    <span class="tool-name">Missing Values</span>
+                    <span class="tool-desc">Null patterns</span>
+                </button>
+                <button class="tool-card" data-tool="outliers">
+                    <span class="tool-icon">⚡</span>
+                    <span class="tool-name">Outliers</span>
+                    <span class="tool-desc">IQR detection</span>
+                </button>
+                <button class="tool-card" data-tool="pairplot">
+                    <span class="tool-icon">🔄</span>
+                    <span class="tool-name">Pair Plot</span>
+                    <span class="tool-desc">Pairwise scatter</span>
+                </button>
+            </div>
+
+            <!-- Analysis Loading -->
+            <div id="analysis-loading" class="loading-overlay" style="display:none">
+                <div class="loader-spinner"></div>
+                <p id="analysis-loading-text">Running analysis...</p>
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section id="results-section" class="section" style="display:none">
+            <div class="section-header">
+                <div class="section-title-row">
+                    <h2>📋 Analysis Results</h2>
+                    <div class="results-controls">
+                        <button class="btn btn-outline btn-sm" id="btn-clear-results">Clear</button>
+                        <button class="btn btn-outline btn-sm" id="btn-show-context">View LLM Context</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Token Savings Dashboard -->
+            <div class="token-dashboard" id="token-dashboard">
+                <div class="token-card">
+                    <div class="token-card-icon">📊</div>
+                    <div class="token-card-value" id="td-schema-savings">0%</div>
+                    <div class="token-card-label">Schema Compression</div>
+                </div>
+                <div class="token-card">
+                    <div class="token-card-icon">📜</div>
+                    <div class="token-card-value" id="td-history-savings">0%</div>
+                    <div class="token-card-label">History Compression</div>
+                </div>
+                <div class="token-card">
+                    <div class="token-card-icon">🔋</div>
+                    <div class="token-card-value" id="td-total-saved">0</div>
+                    <div class="token-card-label">Total Tokens Saved</div>
+                </div>
+                <div class="token-card">
+                    <div class="token-card-icon">🔬</div>
+                    <div class="token-card-value" id="td-steps">0</div>
+                    <div class="token-card-label">Analysis Steps</div>
+                </div>
+            </div>
+
+            <!-- Results List -->
+            <div id="results-list" class="results-list"></div>
+        </section>
+
+        <!-- Context Modal -->
+        <div id="context-modal" class="modal" style="display:none">
+            <div class="modal-overlay" id="modal-overlay"></div>
+            <div class="modal-content glass-card">
+                <div class="modal-header">
+                    <h3>🧬 Compressed LLM Context</h3>
+                    <button class="btn btn-ghost" id="btn-close-modal">✕</button>
+                </div>
+                <p class="modal-desc">This is what would be sent to an LLM — compressed schema + history</p>
+                <div class="modal-stats" id="modal-stats"></div>
+                <pre class="modal-code" id="modal-context-code"></pre>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <p>Built with ❤️ for Intel Unnati Program | Powered by <strong>ScaleDown</strong> API</p>
+            <p class="footer-sub">Data Analysis Agent v1.0 — Challenge 2: AI Agents</p>
+        </div>
+    </footer>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>

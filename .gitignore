@@ -1,0 +1,58 @@
+# ===== Environment & Secrets =====
+.env
+.env.local
+.env.production
+
+# ===== Python =====
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+*.whl
+
+# ===== Virtual Environment =====
+venv/
+.venv/
+env/
+ENV/
+
+# ===== IDE =====
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.settings/
+
+# ===== OS Files =====
+.DS_Store
+Thumbs.db
+desktop.ini
+ehthumbs.db
+
+# ===== Project Specific =====
+uploads/
+static/charts/
+sample_data/
+
+# ===== Data Files =====
+*.csv
+*.xlsx
+*.xls
+*.tsv
+*.parquet
+*.h5
+*.hdf5
+
+# ===== Logs =====
+*.log
+
+# ===== Misc =====
+.gemini/
+.agent/
