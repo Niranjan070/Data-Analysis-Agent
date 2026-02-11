@@ -6,6 +6,9 @@
 [![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python)](https://python.org)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?logo=fastapi)](https://fastapi.tiangolo.com)
 [![ScaleDown](https://img.shields.io/badge/Powered%20by-ScaleDown-6c5ce7)](https://scaledown.ai)
+[![Live Demo](https://img.shields.io/badge/🔗_Live_Demo-Render-46E3B7?logo=render)](https://data-analysis-agent-hat8.onrender.com/)
+
+### 🌐 [Live Demo → https://data-analysis-agent-hat8.onrender.com](https://data-analysis-agent-hat8.onrender.com/)
 
 ---
 
